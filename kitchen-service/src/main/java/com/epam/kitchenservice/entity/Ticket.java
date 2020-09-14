@@ -19,10 +19,6 @@ public class Ticket {
     @Temporal(TemporalType.TIMESTAMP)
     private Date creationTime;
 
-    @Column(name = "completed", columnDefinition="DATETIME",nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date completionTime;
-
     @Column
     private Long orderId;
 

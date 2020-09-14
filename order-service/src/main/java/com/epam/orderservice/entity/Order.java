@@ -33,6 +33,10 @@ public class Order {
     @Column(name = "credit_card",nullable = false)
     private String creditCard;
 
+    @Column
+    private Long sum;
+
     @Column(name = "order_description",nullable = false)
     private String orderDescription;
+
 }
