@@ -16,19 +16,25 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.mapstruct.factory.Mappers;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
-@RequiredArgsConstructor
+@NoArgsConstructor
 public class OrderSubscriber implements MessageListener {
 
-    private final OrderRepository orderRepository;
-    private final ObjectMapper objectMapper;
+    private OrderRepository orderRepository;
+    private ObjectMapper objectMapper;
     private final OrderMapper orderMapper = Mappers.getMapper(OrderMapper.class);
 
+    @Autowired
+    public OrderSubscriber(OrderRepository orderRepository,ObjectMapper objectMapper) {
+        this.orderRepository = orderRepository;
+        this.objectMapper = objectMapper;
+    }
 
     @SneakyThrows
     @Override
