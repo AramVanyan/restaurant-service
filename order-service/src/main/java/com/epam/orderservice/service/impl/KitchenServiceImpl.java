@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class KitchenServiceImpl implements KitchenService {
     @Override
-    public TicketDto composeDelivery(Order order) {
+    public TicketDto composeTicket(Order order) {
         return new TicketDto(order.getId());
     }
 }

@@ -5,5 +5,5 @@ import com.epam.orderservice.dto.TicketDto;
 import com.epam.orderservice.entity.Order;
 
 public interface KitchenService {
-    TicketDto composeDelivery(Order order);
+    TicketDto composeTicket(Order order);
 }
