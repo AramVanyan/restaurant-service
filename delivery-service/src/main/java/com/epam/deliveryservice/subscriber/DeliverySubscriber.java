@@ -4,6 +4,7 @@ import com.epam.deliveryservice.dto.DeliveryDto;
 import com.epam.deliveryservice.entity.Delivery;
 import com.epam.deliveryservice.mapper.DeliveryMapper;
 import com.epam.deliveryservice.repository.DeliveryRepository;
+import com.epam.deliveryservice.service.DeliveryService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
@@ -19,15 +20,15 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @NoArgsConstructor
 public class DeliverySubscriber implements MessageListener {
-    private DeliveryRepository deliveryRepository;
+    private DeliveryService deliveryService;
     private ObjectMapper objectMapper;
     private final DeliveryMapper deliveryMapper = Mappers.getMapper(DeliveryMapper.class);
 
 
     @Autowired
-    public DeliverySubscriber(DeliveryRepository deliveryRepository,ObjectMapper objectMapper) {
+    public DeliverySubscriber(DeliveryService deliveryService,ObjectMapper objectMapper) {
         this.objectMapper=objectMapper;
-        this.deliveryRepository = deliveryRepository;
+        this.deliveryService = deliveryService;
     }
 
     @SneakyThrows
@@ -35,7 +36,7 @@ public class DeliverySubscriber implements MessageListener {
     public void onMessage(Message message, byte[] bytes) {
         DeliveryDto deliveryDto = objectMapper.readValue(message.getBody(), DeliveryDto.class);
         Delivery delivery=deliveryMapper.toEntity(deliveryDto);
-        deliveryRepository.save(delivery);
+        deliveryService.save(delivery);
 
 
 

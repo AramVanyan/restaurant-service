@@ -3,7 +3,7 @@ package com.epam.kitchenservice.subscriber;
 import com.epam.kitchenservice.dto.TicketDto;
 import com.epam.kitchenservice.entity.Ticket;
 import com.epam.kitchenservice.mapper.TicketMapper;
-import com.epam.kitchenservice.repository.KitchenRepository;
+import com.epam.kitchenservice.service.KitchenService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
@@ -18,26 +18,24 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @NoArgsConstructor
 public class KitchenSubscriber implements MessageListener {
-    private KitchenRepository kitchenRepository;
+    private KitchenService kitchenService;
     private ObjectMapper objectMapper;
     private final TicketMapper ticketMapper = Mappers.getMapper(TicketMapper.class);
 
 
     @Autowired
-    public KitchenSubscriber(KitchenRepository kitchenRepository,ObjectMapper objectMapper) {
-        this.objectMapper=objectMapper;
-        this.kitchenRepository = kitchenRepository;
+    public KitchenSubscriber(KitchenService kitchenService, ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+        this.kitchenService = kitchenService;
+
     }
 
     @SneakyThrows
     @Override
     public void onMessage(Message message, byte[] bytes) {
         TicketDto ticketDto = objectMapper.readValue(message.getBody(), TicketDto.class);
-        Ticket ticket= ticketMapper.toEntity(ticketDto);
-        kitchenRepository.save(ticket);
-
-
-
+        Ticket ticket = ticketMapper.toEntity(ticketDto);
+        kitchenService.save(ticket);
 
     }
 }
