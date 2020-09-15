@@ -1,5 +1,6 @@
 package com.epam.orderservice.configuration;
 
+import com.epam.orderservice.publisher.DeliveryPublisher;
 import com.epam.orderservice.subscriber.OrderSubscriber;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,14 +36,31 @@ public class RedisConfiguration {
         return new ChannelTopic("createOrder");
     }
 
-//    @Bean
-//    OrderPublisher redisPublisher(@Autowired RedisTemplate<?, ?> redisTemplate) {
-//        return new OrderPublisher(redisTemplate, topic());
-//    }
-//    @Bean
-//    ChannelTopic topic() {
-//        return new ChannelTopic("createOrder");
-//    }
+    @Bean
+    DeliveryPublisher deliveryPublisher(@Autowired RedisTemplate<?, ?> redisTemplate) {
+        return new DeliveryPublisher(redisTemplate, deliveryTopic());
+    }
+    @Bean
+    ChannelTopic deliveryTopic() {
+        return new ChannelTopic("deliveryChannel");
+    }
 
+    @Bean
+    DeliveryPublisher paymentPublisher(@Autowired RedisTemplate<?, ?> redisTemplate) {
+        return new DeliveryPublisher(redisTemplate, paymentTopic());
+    }
+    @Bean
+    ChannelTopic paymentTopic() {
+        return new ChannelTopic("paymentChannel");
+    }
+
+    @Bean
+    DeliveryPublisher kitchenPublisher(@Autowired RedisTemplate<?, ?> redisTemplate) {
+        return new DeliveryPublisher(redisTemplate, kitchenTopic());
+    }
+    @Bean
+    ChannelTopic kitchenTopic() {
+        return new ChannelTopic("kitchenChannel");
+    }
 }
 

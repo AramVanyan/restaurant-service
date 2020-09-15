@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface KitchenRepository extends JpaRepository<Ticket,Long> {
+    Ticket deleteByOrderId(Long orderId);
 }

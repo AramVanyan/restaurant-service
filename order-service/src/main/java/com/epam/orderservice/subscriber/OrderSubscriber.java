@@ -5,10 +5,12 @@ import com.epam.orderservice.dto.OrderDto;
 import com.epam.orderservice.dto.PaymentDto;
 import com.epam.orderservice.dto.TicketDto;
 import com.epam.orderservice.entity.Order;
+import com.epam.orderservice.event.Event;
 import com.epam.orderservice.mapper.OrderMapper;
 import com.epam.orderservice.repository.OrderRepository;
 import com.epam.orderservice.service.DeliveryService;
 import com.epam.orderservice.service.KitchenService;
+import com.epam.orderservice.service.OrderService;
 import com.epam.orderservice.service.PaymentService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.NoArgsConstructor;
@@ -26,23 +28,21 @@ import org.springframework.stereotype.Service;
 @NoArgsConstructor
 public class OrderSubscriber implements MessageListener {
 
-    private OrderRepository orderRepository;
+    private OrderService orderService;
     private ObjectMapper objectMapper;
     private final OrderMapper orderMapper = Mappers.getMapper(OrderMapper.class);
 
     @Autowired
-    public OrderSubscriber(OrderRepository orderRepository,ObjectMapper objectMapper) {
-        this.orderRepository = orderRepository;
+    public OrderSubscriber(OrderService orderService,ObjectMapper objectMapper) {
+        this.orderService = orderService;
         this.objectMapper = objectMapper;
     }
 
     @SneakyThrows
     @Override
     public void onMessage(Message message, byte[] bytes) {
-        OrderDto orderDto = objectMapper.readValue(message.getBody(), OrderDto.class);
-        Order order = orderMapper.toEntity(orderDto);
+        Object event = objectMapper.readValue(message.getBody(), Event.class);
 
-        Order savedOrder = orderRepository.save(order);
 
 
 
