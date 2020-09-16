@@ -1,6 +1,5 @@
-package com.epam.kitchenservice.entity;
+package com.epam.orderservice.entity;
 
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -10,7 +9,6 @@ import java.util.Date;
 @Entity
 @Table(name = "ticket")
 @Data
-@Builder
 @NoArgsConstructor
 public class Ticket {
     @Id

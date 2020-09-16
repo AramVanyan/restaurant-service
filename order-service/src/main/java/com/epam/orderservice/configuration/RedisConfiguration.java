@@ -2,6 +2,7 @@ package com.epam.orderservice.configuration;
 
 import com.epam.orderservice.publisher.DeliveryPublisher;
 import com.epam.orderservice.subscriber.OrderSubscriber;
+import com.epam.orderservice.subscriber.SagaEventSubscriber;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -21,7 +22,8 @@ public class RedisConfiguration {
     @Bean
     RedisMessageListenerContainer container() {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
-        container.addMessageListener(messageListener(), topic());
+        container.addMessageListener(messageListener(),topic());
+        container.addMessageListener(messageListenerSaga(),responseTopic());
         container.setConnectionFactory(redisConnectionFactory);
         return container;
     }
@@ -36,13 +38,15 @@ public class RedisConfiguration {
         return new ChannelTopic("createOrder");
     }
 
+
     @Bean
-    DeliveryPublisher deliveryPublisher(@Autowired RedisTemplate<?, ?> redisTemplate) {
-        return new DeliveryPublisher(redisTemplate, deliveryTopic());
+    MessageListenerAdapter messageListenerSaga() {
+        return new MessageListenerAdapter(new SagaEventSubscriber());
     }
+
     @Bean
-    ChannelTopic deliveryTopic() {
-        return new ChannelTopic("deliveryChannel");
+    ChannelTopic responseTopic() {
+        return new ChannelTopic("orderResponse");
     }
 
     @Bean

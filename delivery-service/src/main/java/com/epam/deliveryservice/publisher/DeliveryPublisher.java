@@ -1,8 +1,6 @@
-package com.epam.paymentservice.publisher;
+package com.epam.deliveryservice.publisher;
 
-
-import com.epam.paymentservice.entity.Payment;
-import com.epam.paymentservice.event.Event;
+import com.epam.deliveryservice.event.Event;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -12,16 +10,16 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
-public class EventPublisher {
+public class DeliveryPublisher {
 
     private final RedisTemplate<?, ?> redisTemplate;
     private final ChannelTopic topic;
 
 
     @Autowired
-    public EventPublisher(RedisTemplate<?, ?> redisTemplate, ChannelTopic topic) {
+    public DeliveryPublisher(RedisTemplate<?, ?> redisTemplate, ChannelTopic topic) {
         this.redisTemplate = redisTemplate;
-        this.redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<>(Payment.class));
+        this.redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<>(Event.class));
         this.topic = topic;
     }
 
@@ -29,4 +27,5 @@ public class EventPublisher {
         log.info("Sending " + event);
         redisTemplate.convertAndSend(topic.getTopic(), event);
     }
+
 }

@@ -3,6 +3,9 @@ package com.epam.paymentservice.subscriber;
 
 import com.epam.paymentservice.dto.PaymentDto;
 import com.epam.paymentservice.entity.Payment;
+import com.epam.paymentservice.event.Event;
+import com.epam.paymentservice.event.EventResult;
+import com.epam.paymentservice.event.EventType;
 import com.epam.paymentservice.mapper.PaymentMapper;
 import com.epam.paymentservice.service.PaymentService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -35,7 +38,14 @@ public class PaymentSubscriber implements MessageListener {
     @Override
     public void onMessage(Message message, byte[] bytes) {
         PaymentDto paymentDto = objectMapper.readValue(message.getBody(), PaymentDto.class);
-        Payment payment= paymentMapper.toEntity(paymentDto);
+        Payment payment = paymentMapper.toEntity(paymentDto);
         paymentService.save(payment);
+
+        Event event = Event.builder()
+                .orderId(payment.getOrderId())
+                .eventType(EventType.PAYMENT)
+                .eventResult(EventResult.SUCCESS)
+                .build();
+        paymentService.publishEvent(event);
     }
 }

@@ -1,10 +1,13 @@
 package com.epam.kitchenservice.configuration;
 
+import com.epam.kitchenservice.publisher.KitchenPublisher;
 import com.epam.kitchenservice.subscriber.KitchenSubscriber;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
@@ -32,5 +35,12 @@ public class RedisConfiguration {
     ChannelTopic topic() {
         return new ChannelTopic("createOrder");
     }
+    @Bean
+    KitchenPublisher redisPublisher(@Autowired RedisTemplate<?, ?> redisTemplate) {
+        return new KitchenPublisher(redisTemplate, publishTopic());
+    }
+    @Bean
+    ChannelTopic publishTopic() {
+        return new ChannelTopic("orderResponse");
 
 }

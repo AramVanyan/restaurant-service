@@ -1,7 +1,7 @@
-package com.epam.deliveryservice.configuration;
+package com.epam.paymentservice.configuration;
 
-import com.epam.deliveryservice.publisher.DeliveryPublisher;
-import com.epam.deliveryservice.subscriber.DeliverySubscriber;
+import com.epam.paymentservice.publisher.EventPublisher;
+import com.epam.paymentservice.subscriber.PaymentSubscriber;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -28,18 +28,19 @@ public class RedisConfiguration {
 
     @Bean
     MessageListenerAdapter messageListener() {
-        return new MessageListenerAdapter(new DeliverySubscriber());
+        return new MessageListenerAdapter(new PaymentSubscriber());
     }
 
-    @Bean()
+    @Bean
     ChannelTopic topic() {
         return new ChannelTopic("createOrder");
     }
 
     @Bean
-    DeliveryPublisher redisPublisher(@Autowired RedisTemplate<?, ?> redisTemplate) {
-        return new DeliveryPublisher(redisTemplate, publishTopic());
+    EventPublisher redisPublisher(@Autowired RedisTemplate<?, ?> redisTemplate) {
+        return new EventPublisher(redisTemplate, publishTopic());
     }
+
     @Bean
     ChannelTopic publishTopic() {
         return new ChannelTopic("orderResponse");
