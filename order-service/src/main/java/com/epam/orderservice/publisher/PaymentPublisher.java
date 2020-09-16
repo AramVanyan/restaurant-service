@@ -23,8 +23,8 @@ public class PaymentPublisher {
         this.topic = topic;
     }
 
-    public void publish(PaymentDto order) {
-        log.info("Sending " + order);
-        redisTemplate.convertAndSend(topic.getTopic(), order);
+    public void publish(PaymentDto payment) {
+        log.info("Sending " + payment);
+        redisTemplate.convertAndSend(topic.getTopic(), payment);
     }
 }

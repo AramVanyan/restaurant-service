@@ -27,6 +27,11 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public Order findById(Long id) {
+        return orderRepository.findById(id).orElse(null);
+    }
+
+    @Override
     public Order compensateOrder(Long orderId) {
         Order order = orderRepository.getOne(orderId);
         orderRepository.deleteById(orderId);
@@ -49,5 +54,10 @@ public class OrderServiceImpl implements OrderService {
     public TicketDto publishTicket(TicketDto ticketDto) {
         kitchenPublisher.publish(ticketDto);
         return ticketDto;
+    }
+
+    @Override
+    public void publishCompensationEvent(Order order) {
+
     }
 }

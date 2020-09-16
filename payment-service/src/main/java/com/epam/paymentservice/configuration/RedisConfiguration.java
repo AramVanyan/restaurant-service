@@ -33,17 +33,14 @@ public class RedisConfiguration {
 
     @Bean
     ChannelTopic topic() {
-        return new ChannelTopic("createOrder");
+        return new ChannelTopic("paymentChannel");
     }
 
     @Bean
-    EventPublisher redisPublisher(@Autowired RedisTemplate<?, ?> redisTemplate) {
-        return new EventPublisher(redisTemplate, publishTopic());
-    }
-
+    EventPublisher redisPublisher(@Autowired RedisTemplate<?, ?> redisTemplate) { return new EventPublisher(redisTemplate, publishTopic()); }
     @Bean
     ChannelTopic publishTopic() {
-        return new ChannelTopic("orderResponse");
+        return new ChannelTopic("sagaChannel");
     }
 
 }

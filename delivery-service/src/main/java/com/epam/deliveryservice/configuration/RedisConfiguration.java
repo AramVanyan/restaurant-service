@@ -33,7 +33,7 @@ public class RedisConfiguration {
 
     @Bean()
     ChannelTopic topic() {
-        return new ChannelTopic("createOrder");
+        return new ChannelTopic("deliveryChannel");
     }
 
     @Bean
@@ -42,7 +42,7 @@ public class RedisConfiguration {
     }
     @Bean
     ChannelTopic publishTopic() {
-        return new ChannelTopic("orderResponse");
+        return new ChannelTopic("sagaChannel");
     }
 
 }

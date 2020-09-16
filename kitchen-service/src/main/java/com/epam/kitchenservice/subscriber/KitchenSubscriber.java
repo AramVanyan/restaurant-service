@@ -17,6 +17,9 @@ import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 @Service
 @Slf4j
 @NoArgsConstructor
@@ -36,16 +39,29 @@ public class KitchenSubscriber implements MessageListener {
     @SneakyThrows
     @Override
     public void onMessage(Message message, byte[] bytes) {
+        Event event;
+
         TicketDto ticketDto = objectMapper.readValue(message.getBody(), TicketDto.class);
-        Ticket ticket = ticketMapper.toEntity(ticketDto);
-        kitchenService.save(ticket);
 
-        Event event = Event.builder()
-                .orderId(ticket.getOrderId())
-                .eventType(EventType.PAYMENT)
-                .eventResult(EventResult.SUCCESS)
-                .build();
-        kitchenService.publishEvent(event);
+        if (ticketDto.getToBeCompensated()) kitchenService.compensateTicket(ticketDto.getOrderId());
+        else {
+            Ticket ticket = ticketMapper.toEntity(ticketDto);
+            kitchenService.save(ticket);
 
+            String sDate1 = "31/12/2010";
+            Date date = new SimpleDateFormat("dd/MM/yyyy").parse(sDate1);
+
+            event = Event.builder()
+                    .orderId(ticket.getOrderId())
+                    .eventType(EventType.PAYMENT)
+                    .build();
+
+            if (ticket.getCreationTime().after(date)) {
+                event.setEventResult(EventResult.SUCCESS);
+                kitchenService.save(ticket);
+            } else event.setEventResult(EventResult.FAILED);
+
+            kitchenService.publishEvent(event);
+        }
     }
 }

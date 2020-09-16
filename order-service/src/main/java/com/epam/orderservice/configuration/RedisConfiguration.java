@@ -1,6 +1,8 @@
 package com.epam.orderservice.configuration;
 
 import com.epam.orderservice.publisher.DeliveryPublisher;
+import com.epam.orderservice.publisher.KitchenPublisher;
+import com.epam.orderservice.publisher.PaymentPublisher;
 import com.epam.orderservice.subscriber.OrderSubscriber;
 import com.epam.orderservice.subscriber.SagaEventSubscriber;
 import lombok.RequiredArgsConstructor;
@@ -22,45 +24,35 @@ public class RedisConfiguration {
     @Bean
     RedisMessageListenerContainer container() {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
-        container.addMessageListener(messageListener(),topic());
-        container.addMessageListener(messageListenerSaga(),responseTopic());
+        container.addMessageListener(messageListenerSaga(),sagaTopic());
         container.setConnectionFactory(redisConnectionFactory);
         return container;
     }
 
     @Bean
-    MessageListenerAdapter messageListener() {
-        return new MessageListenerAdapter(new OrderSubscriber());
-    }
-
-    @Bean
-    ChannelTopic topic() {
-        return new ChannelTopic("createOrder");
-    }
-
-
+    MessageListenerAdapter messageListener() { return new MessageListenerAdapter(new OrderSubscriber()); }
     @Bean
     MessageListenerAdapter messageListenerSaga() {
         return new MessageListenerAdapter(new SagaEventSubscriber());
     }
-
     @Bean
-    ChannelTopic responseTopic() {
-        return new ChannelTopic("orderResponse");
+    ChannelTopic sagaTopic() {
+        return new ChannelTopic("sagaChannel");
     }
 
     @Bean
-    DeliveryPublisher paymentPublisher(@Autowired RedisTemplate<?, ?> redisTemplate) {
-        return new DeliveryPublisher(redisTemplate, paymentTopic());
+    PaymentPublisher paymentPublisher(@Autowired RedisTemplate<?, ?> redisTemplate) {
+        return new PaymentPublisher(redisTemplate, paymentTopic());
     }
     @Bean
     ChannelTopic paymentTopic() {
         return new ChannelTopic("paymentChannel");
     }
 
+
     @Bean
-    DeliveryPublisher kitchenPublisher(@Autowired RedisTemplate<?, ?> redisTemplate) {
-        return new DeliveryPublisher(redisTemplate, kitchenTopic());
+    KitchenPublisher kitchenPublisher(@Autowired RedisTemplate<?, ?> redisTemplate) {
+        return new KitchenPublisher(redisTemplate, kitchenTopic());
     }
     @Bean
     ChannelTopic kitchenTopic() {

@@ -10,7 +10,10 @@ import javax.validation.constraints.NotNull;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class TicketDto {
     @NotNull
     private Long orderId;
+    @NotNull
+    private Boolean toBeCompensated;
 }

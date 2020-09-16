@@ -11,10 +11,14 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class DeliveryDto {
     @NotNull
     private Long orderId;
 
     @NotNull
     private Date scheduledDeliveryTime;
+
+    @NotNull
+    private Boolean toBeCompensated;
 }

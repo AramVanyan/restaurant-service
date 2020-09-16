@@ -18,4 +18,7 @@ public class PaymentDto {
     @NotNull
     private Long orderId;
 
+    @NotNull
+    private Boolean toBeCompensated;
+
 }

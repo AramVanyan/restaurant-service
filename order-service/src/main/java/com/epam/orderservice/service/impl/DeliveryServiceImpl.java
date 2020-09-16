@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 public class DeliveryServiceImpl implements DeliveryService {
 
     @Override
-    public DeliveryDto composeDelivery(Order order) {
-        return new DeliveryDto(order.getId(),order.getDeliveryTime());
+    public DeliveryDto composeDelivery(Order order,Boolean toBeCompensated) {
+        return new DeliveryDto(order.getId(),order.getDeliveryTime(),toBeCompensated);
     }
 }

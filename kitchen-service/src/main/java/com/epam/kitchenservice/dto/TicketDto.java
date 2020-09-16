@@ -12,4 +12,7 @@ import javax.validation.constraints.NotNull;
 public class TicketDto {
     @NotNull
     private Long orderId;
+
+    @NotNull
+    private Boolean toBeCompensated;
 }

@@ -18,7 +18,6 @@ import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.stereotype.Service;
 
-
 @Service
 @Slf4j
 @NoArgsConstructor
@@ -38,14 +37,22 @@ public class PaymentSubscriber implements MessageListener {
     @Override
     public void onMessage(Message message, byte[] bytes) {
         PaymentDto paymentDto = objectMapper.readValue(message.getBody(), PaymentDto.class);
-        Payment payment = paymentMapper.toEntity(paymentDto);
-        paymentService.save(payment);
 
-        Event event = Event.builder()
-                .orderId(payment.getOrderId())
-                .eventType(EventType.PAYMENT)
-                .eventResult(EventResult.SUCCESS)
-                .build();
-        paymentService.publishEvent(event);
+        if (paymentDto.getToBeCompensated()) paymentService.compensatePayment(paymentDto.getOrderId());
+        else {
+            Payment payment = paymentMapper.toEntity(paymentDto);
+
+            Event event = Event.builder()
+                    .orderId(payment.getOrderId())
+                    .eventType(EventType.PAYMENT)
+                    .build();
+
+            if (payment.getSum() > 15000) {
+                event.setEventResult(EventResult.SUCCESS);
+                paymentService.save(payment);
+            } else event.setEventResult(EventResult.FAILED);
+
+            paymentService.publishEvent(event);
+        }
     }
 }

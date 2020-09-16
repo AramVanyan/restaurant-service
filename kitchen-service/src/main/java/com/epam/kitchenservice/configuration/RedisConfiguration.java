@@ -33,7 +33,7 @@ public class RedisConfiguration {
 
     @Bean
     ChannelTopic topic() {
-        return new ChannelTopic("createOrder");
+        return new ChannelTopic("kitchenChannel");
     }
     @Bean
     KitchenPublisher redisPublisher(@Autowired RedisTemplate<?, ?> redisTemplate) {
@@ -41,6 +41,6 @@ public class RedisConfiguration {
     }
     @Bean
     ChannelTopic publishTopic() {
-        return new ChannelTopic("orderResponse");
-
+        return new ChannelTopic("sagaChannel");
+    }
 }

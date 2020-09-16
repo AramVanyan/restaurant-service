@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 public class CompensationEvent {
-    EventState eventState;
     EventType eventType;
     Long orderId;
 }
