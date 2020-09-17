@@ -6,6 +6,7 @@ import com.epam.orderservice.dto.TicketDto;
 import com.epam.orderservice.entity.Order;
 import com.epam.orderservice.publisher.DeliveryPublisher;
 import com.epam.orderservice.publisher.KitchenPublisher;
+import com.epam.orderservice.publisher.OrderHistoryPublisher;
 import com.epam.orderservice.publisher.PaymentPublisher;
 import com.epam.orderservice.repository.OrderRepository;
 import com.epam.orderservice.service.OrderService;
@@ -19,6 +20,7 @@ public class OrderServiceImpl implements OrderService {
     private final KitchenPublisher kitchenPublisher;
     private final DeliveryPublisher deliveryPublisher;
     private final OrderRepository orderRepository;
+    private final OrderHistoryPublisher historyPublisher;
 
 
     @Override
@@ -59,5 +61,11 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void publishCompensationEvent(Order order) {
 
+    }
+
+    @Override
+    public Order publishHistoryEvent(Order order) {
+        historyPublisher.publish(order);
+        return order;
     }
 }

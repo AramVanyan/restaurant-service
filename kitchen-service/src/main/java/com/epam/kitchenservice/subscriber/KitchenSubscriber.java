@@ -62,6 +62,7 @@ public class KitchenSubscriber implements MessageListener {
             } else event.setEventResult(EventResult.FAILED);
 
             kitchenService.publishEvent(event);
+            kitchenService.publishHistoryEvent(ticket);
         }
     }
 }

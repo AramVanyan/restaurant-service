@@ -1,9 +1,6 @@
-package com.epam.paymentservice.configuration;
+package com.epam.historyservice.configuration;
 
-import com.epam.paymentservice.entity.Payment;
-import com.epam.paymentservice.publisher.EventPublisher;
-import com.epam.paymentservice.publisher.PaymentHistoryPublisher;
-import com.epam.paymentservice.subscriber.PaymentSubscriber;
+import com.epam.historyservice.subscriber.HistorySubscriber;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -30,28 +27,12 @@ public class RedisConfiguration {
 
     @Bean
     MessageListenerAdapter messageListener() {
-        return new MessageListenerAdapter(new PaymentSubscriber());
+        return new MessageListenerAdapter(new HistorySubscriber());
     }
 
-    @Bean
+    @Bean()
     ChannelTopic topic() {
-        return new ChannelTopic("paymentChannel");
-    }
-
-    @Bean
-    EventPublisher redisPublisher(@Autowired RedisTemplate<?, ?> redisTemplate) { return new EventPublisher(redisTemplate, publishTopic()); }
-    @Bean
-    ChannelTopic publishTopic() {
-        return new ChannelTopic("sagaChannel");
-    }
-
-    @Bean
-    PaymentHistoryPublisher redisHistoryPublisher(@Autowired RedisTemplate<?, ?> redisTemplate) {
-        return new PaymentHistoryPublisher(redisTemplate, publishHistoryTopic());
-    }
-    @Bean
-    ChannelTopic publishHistoryTopic() {
         return new ChannelTopic("history");
     }
 
-}
+    }

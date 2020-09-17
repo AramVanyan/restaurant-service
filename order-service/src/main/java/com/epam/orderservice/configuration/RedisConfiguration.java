@@ -2,6 +2,7 @@ package com.epam.orderservice.configuration;
 
 import com.epam.orderservice.publisher.DeliveryPublisher;
 import com.epam.orderservice.publisher.KitchenPublisher;
+import com.epam.orderservice.publisher.OrderHistoryPublisher;
 import com.epam.orderservice.publisher.PaymentPublisher;
 import com.epam.orderservice.subscriber.OrderSubscriber;
 import com.epam.orderservice.subscriber.SagaEventSubscriber;
@@ -50,6 +51,8 @@ public class RedisConfiguration {
     }
 
 
+
+
     @Bean
     KitchenPublisher kitchenPublisher(@Autowired RedisTemplate<?, ?> redisTemplate) {
         return new KitchenPublisher(redisTemplate, kitchenTopic());
@@ -57,6 +60,15 @@ public class RedisConfiguration {
     @Bean
     ChannelTopic kitchenTopic() {
         return new ChannelTopic("kitchenChannel");
+    }
+
+    @Bean
+    OrderHistoryPublisher redisHistoryPublisher(@Autowired RedisTemplate<?, ?> redisTemplate) {
+        return new OrderHistoryPublisher(redisTemplate, publishHistoryTopic());
+    }
+    @Bean("history")
+    ChannelTopic publishHistoryTopic() {
+        return new ChannelTopic("history");
     }
 }
 

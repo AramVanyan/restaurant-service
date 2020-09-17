@@ -13,4 +13,6 @@ public interface OrderService {
     PaymentDto publishPayment(PaymentDto paymentDto);
     TicketDto publishTicket(TicketDto ticketDto);
     void publishCompensationEvent(Order order);
+
+    Order publishHistoryEvent(Order order);
 }

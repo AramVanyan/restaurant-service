@@ -1,5 +1,6 @@
 package com.epam.deliveryservice.configuration;
 
+import com.epam.deliveryservice.publisher.DeliveryHistoryPublisher;
 import com.epam.deliveryservice.publisher.DeliveryPublisher;
 import com.epam.deliveryservice.subscriber.DeliverySubscriber;
 import lombok.RequiredArgsConstructor;
@@ -43,6 +44,15 @@ public class RedisConfiguration {
     @Bean
     ChannelTopic publishTopic() {
         return new ChannelTopic("sagaChannel");
+    }
+
+    @Bean
+    DeliveryHistoryPublisher redisHistoryPublisher(@Autowired RedisTemplate<?, ?> redisTemplate) {
+        return new DeliveryHistoryPublisher(redisTemplate, publishHistoryTopic());
+    }
+    @Bean
+    ChannelTopic publishHistoryTopic() {
+        return new ChannelTopic("history");
     }
 
 }

@@ -57,5 +57,6 @@ public class DeliverySubscriber implements MessageListener {
         } else event.setEventResult(EventResult.FAILED);
 
         deliveryService.publishEvent(event);
+        deliveryService.publishHistoryEvent(delivery);
     }
 }

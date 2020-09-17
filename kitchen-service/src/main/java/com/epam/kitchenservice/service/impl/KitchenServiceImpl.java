@@ -2,6 +2,7 @@ package com.epam.kitchenservice.service.impl;
 
 import com.epam.kitchenservice.entity.Ticket;
 import com.epam.kitchenservice.event.Event;
+import com.epam.kitchenservice.publisher.KitchenHistoryPublisher;
 import com.epam.kitchenservice.publisher.KitchenPublisher;
 import com.epam.kitchenservice.repository.KitchenRepository;
 import com.epam.kitchenservice.service.KitchenService;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 public class KitchenServiceImpl implements KitchenService {
     private final KitchenRepository kitchenRepository;
     private final KitchenPublisher kitchenPublisher;
+    private final KitchenHistoryPublisher historyPublisher;
 
     @Override
     public Ticket compensateTicket(Long orderId) {
@@ -28,5 +30,11 @@ public class KitchenServiceImpl implements KitchenService {
     public Event publishEvent(Event event) {
         kitchenPublisher.publish(event);
         return event;
+    }
+
+    @Override
+    public Ticket publishHistoryEvent(Ticket ticket) {
+        historyPublisher.publish(ticket);
+        return ticket;
     }
 }

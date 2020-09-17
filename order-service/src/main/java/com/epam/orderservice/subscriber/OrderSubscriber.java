@@ -41,5 +41,6 @@ public class OrderSubscriber implements MessageListener {
         orderService.save(order);
         PaymentDto paymentDto = paymentService.composePayment(order,false);
         orderService.publishPayment(paymentDto);
+        orderService.publishHistoryEvent(order);
     }
 }

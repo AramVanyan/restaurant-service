@@ -1,5 +1,6 @@
 package com.epam.kitchenservice.configuration;
 
+import com.epam.kitchenservice.publisher.KitchenHistoryPublisher;
 import com.epam.kitchenservice.publisher.KitchenPublisher;
 import com.epam.kitchenservice.subscriber.KitchenSubscriber;
 import lombok.RequiredArgsConstructor;
@@ -42,5 +43,14 @@ public class RedisConfiguration {
     @Bean
     ChannelTopic publishTopic() {
         return new ChannelTopic("sagaChannel");
+    }
+
+    @Bean
+    KitchenHistoryPublisher redisHistoryPublisher(@Autowired RedisTemplate<?, ?> redisTemplate) {
+        return new KitchenHistoryPublisher(redisTemplate, publishHistoryTopic());
+    }
+    @Bean("history")
+    ChannelTopic publishHistoryTopic() {
+        return new ChannelTopic("history");
     }
 }
